@@ -10,6 +10,7 @@ from keyboards import kb_stones
 from keyboards import kb_candles
 from keyboards import kb_oils
 from keyboards import kb_buy
+from data_base import db_unloader
 
 
 async def command_start(message: types.Message):
@@ -40,8 +41,43 @@ async def command_stones(message: types.Message):
 async def command_candles(message: types.Message):
     await message.answer('Какая свеча Вас интересует?', reply_markup=kb_candles)
 
-async def command_buy(message: types.Message):
-    await message.answer('Оформление покупки', reply_markup=kb_buy)
+async def command_tarot_course(message: types.Message):
+    await db_unloader(19)
+    await message.answer('Желаете преобрести курс?', reply_markup=kb_buy)
+
+async def command_astrology_course(message: types.Message):
+    await db_unloader(20)
+    await message.answer('Желаете преобрести курс?', reply_markup=kb_buy)
+
+async def command_bazi_course(message: types.Message):
+    await db_unloader(21)
+    await message.answer('Желаете преобрести курс?', reply_markup=kb_buy)
+
+async def command_energy_course(message: types.Message):
+    await db_unloader(22)
+    await message.answer('Желаете преобрести курс?', reply_markup=kb_buy)
+
+async def command_divination(message: types.Message):
+    await db_unloader(23)
+    await message.answer('Желаете записаться?', reply_markup=kb_buy)
+
+async def command_astrology(message: types.Message):
+    await db_unloader(24)
+    await message.answer('Желаете записаться?', reply_markup=kb_buy)
+
+async def command_bazi(message: types.Message):
+    await db_unloader(25)
+    await message.answer('Желаете записаться?', reply_markup=kb_buy)
+
+async def command_rituals(message: types.Message):
+    await db_unloader(26)
+    await message.answer('Желаете записаться?', reply_markup=kb_buy)
+
+
+
+# БЫЛО
+# async def command_buy(message: types.Message):
+#     await message.answer('Оформление покупки', reply_markup=kb_buy)
 
 def register_handlers_client(dp : Dispatcher):
     dp.register_message_handler(command_start, commands=['start', 'help'])
@@ -56,15 +92,34 @@ def register_handlers_client(dp : Dispatcher):
     dp.register_message_handler(command_stones, commands=['Камни'])
     dp.register_message_handler(command_candles, commands=['Свечи'])
 
-    dp.register_message_handler(command_buy, commands=['Курс_Таро', 'Курс_Астрология',
-                                                           'Курс_Бацзы', 'Курс_Энергии',
-                                                           'Гадание', 'Астрология',
-                                                           'Бацзы', 'Ритуалы', 'Медитации',
-                                                           'Гвоздестояние', 'Чакры', 'Йога',
-                                                           'Очищение', 'Интуиция', 'Карьера', 'Любовь'
-                                                           'Розовый_кварц', 'Горный_хрусталь', 'Красная_яшма', 'Аметист',
-                                                           'Лаванда', 'Мелисса', 'Пачули', 'Иланг-иланг',
-                                                           'Уэйта', 'Манара', 'Эры_Водолея', '78_дверей'])
+    # товары
+    dp.register_message_handler(command_tarot_course, commands=['Курс_Таро'])
+    dp.register_message_handler(command_astrology_course, commands=['Курс_Астрология'])
+    dp.register_message_handler(command_bazi_course, commands=['Курс_Бацзы'])
+    dp.register_message_handler(command_energy_course, commands=['Курс_Энергии'])
+    # услуги
+    dp.register_message_handler(command_divination, commands=['Гадание'])
+    dp.register_message_handler(command_astrology, commands=['Астрология'])
+    dp.register_message_handler(command_bazi, commands=['Бацзы'])
+    dp.register_message_handler(command_rituals, commands=['Ритуалы'])
+    # ретриты
+    dp.register_message_handler(command_tarot_course, commands=['Курс_Таро'])
+    dp.register_message_handler(command_tarot_course, commands=['Курс_Таро'])
+    dp.register_message_handler(command_tarot_course, commands=['Курс_Таро'])
+    dp.register_message_handler(command_tarot_course, commands=['Курс_Таро'])
+
+
+
+# БЫЛО
+#     dp.register_message_handler(command_buy, commands=['Медитации',
+#                                                            'Гвоздестояние', 'Чакры', 'Йога',
+#                                                            'Очищение', 'Интуиция', 'Карьера', 'Любовь'
+#                                                            'Розовый_кварц', 'Горный_хрусталь', 'Красная_яшма', 'Аметист',
+#                                                            'Лаванда', 'Мелисса', 'Пачули', 'Иланг-иланг',
+#                                                            'Уэйта', 'Манара', 'Эры_Водолея', '78_дверей'])
+
+    # async def command_(message: types.Message):
+    #     await message.answer('Оформление покупки', reply_markup=kb_buy)
 
 
 
