@@ -92,3 +92,19 @@ btn_Main_Menu = KeyboardButton('/Меню')
 kb_buy = ReplyKeyboardMarkup(resize_keyboard=True)
 kb_buy.add(btn_buy).add(btn_Main_Menu)
 
+btn_buy_course = KeyboardButton('/Приобрести_курс')
+btn_Main_Menu = KeyboardButton('/Меню')
+kb_buy_course = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_buy_course.add(btn_buy_course).add(btn_Main_Menu)
+
+btn_sign_up = KeyboardButton('/Записаться')
+btn_Main_Menu = KeyboardButton('/Меню')
+kb_sign_up = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_sign_up.add(btn_sign_up).add(btn_Main_Menu)
+
+btn_sign_up_retreats = KeyboardButton('/Записаться')
+btn_Main_Menu = KeyboardButton('/Меню')
+kb_retreats = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_retreats.add(btn_sign_up_retreats).add(btn_Main_Menu)
+
+
