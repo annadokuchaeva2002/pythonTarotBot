@@ -102,9 +102,38 @@ btn_Main_Menu = KeyboardButton('/Меню')
 kb_sign_up = ReplyKeyboardMarkup(resize_keyboard=True)
 kb_sign_up.add(btn_sign_up).add(btn_Main_Menu)
 
-btn_sign_up_retreats = KeyboardButton('/Записаться')
+btn_sign_up_retreats = KeyboardButton('/Принять_участие')
 btn_Main_Menu = KeyboardButton('/Меню')
 kb_retreats = ReplyKeyboardMarkup(resize_keyboard=True)
 kb_retreats.add(btn_sign_up_retreats).add(btn_Main_Menu)
 
+btn_buy_product = KeyboardButton('/Приобрести_товар')
+btn_Main_Menu = KeyboardButton('/Меню')
+kb_buy_product = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_buy_product.add(btn_buy_product).add(btn_Main_Menu)
+
+
+btn_courses_category = KeyboardButton('/Курсы_таблица')
+btn_services_category = KeyboardButton('/Услуги_таблица')
+btn_products_category = KeyboardButton('/Товары_таблица')
+btn_tours_category = KeyboardButton('/Ретриты_таблица')
+
+kb_product_category = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_product_category.add(btn_courses_category).add(btn_services_category).add(btn_products_category).add(btn_tours_category)
+
+btn_download = KeyboardButton('/Загрузить')
+btn_add_admin = KeyboardButton('/Добавить_админа')
+btn_add_mentor = KeyboardButton('/Добавить_ментора')
+btn_delete_mentor = KeyboardButton('/Удалить_ментора')
+btn_delete_admin = KeyboardButton('/Удалить_админа')
+btn_delete_course = KeyboardButton('/Удалить_курс')
+btn_delete_product = KeyboardButton('/Удалить_товар')
+btn_delete_service = KeyboardButton('/Удалить_услугу')
+btn_delete_tour = KeyboardButton('/Удалить_ретрит')
+
+
+kb_admin = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_admin.add(btn_delete_tour).insert(btn_delete_course).add(btn_delete_product).insert(btn_delete_service).add(btn_download)\
+    .insert(btn_Main_Menu).add(btn_add_admin).insert(btn_delete_admin).add(btn_add_mentor)\
+    .insert(btn_delete_mentor)
 
