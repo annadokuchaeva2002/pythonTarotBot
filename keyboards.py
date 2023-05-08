@@ -130,10 +130,70 @@ btn_delete_course = KeyboardButton('/Удалить_курс')
 btn_delete_product = KeyboardButton('/Удалить_товар')
 btn_delete_service = KeyboardButton('/Удалить_услугу')
 btn_delete_tour = KeyboardButton('/Удалить_ретрит')
-
+btn_types = KeyboardButton('/Типы')
 
 kb_admin = ReplyKeyboardMarkup(resize_keyboard=True)
-kb_admin.add(btn_delete_tour).insert(btn_delete_course).add(btn_delete_product).insert(btn_delete_service).add(btn_download)\
-    .insert(btn_Main_Menu).add(btn_add_admin).insert(btn_delete_admin).add(btn_add_mentor)\
-    .insert(btn_delete_mentor)
+kb_admin.add(btn_delete_tour).insert(btn_delete_course).add(btn_delete_product).insert(btn_delete_service)\
+    .add(btn_download).insert(btn_types).add(btn_add_admin).insert(btn_delete_admin).add(btn_add_mentor)\
+    .insert(btn_delete_mentor).add(btn_Main_Menu)
 
+
+btn_view_types_course = KeyboardButton('/Показать_типы_курсов')
+btn_view_types_product = KeyboardButton('/Показать_типы_товаров')
+btn_view_types_service = KeyboardButton('/Показать_типы_услуг')
+btn_view_types_tour = KeyboardButton('/Показать_типы_ретритов')
+btn_admin_menu = KeyboardButton('/Админ_меню')
+
+kb_view_types = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_view_types.add(btn_view_types_course).add(btn_view_types_product).add(btn_view_types_service)\
+    .add(btn_view_types_tour).add(btn_admin_menu)
+
+btn_add_types_tour = KeyboardButton('/Добавить_тип_ретрита')
+btn_delete_types_tour = KeyboardButton('/Удалить_тип_ретрита')
+
+kb_view_types_tours = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_view_types_tours.add(btn_add_types_tour).add(btn_delete_types_tour).add(btn_types)
+
+btn_add_types_product = KeyboardButton('/Добавить_тип_товара')
+btn_delete_types_product = KeyboardButton('/Удалить_тип_товара')
+
+kb_view_types_product = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_view_types_product.add(btn_add_types_product).add(btn_delete_types_product).add(btn_types)
+
+btn_add_types_service = KeyboardButton('/Добавить_тип_услуг')
+btn_delete_types_service = KeyboardButton('/Удалить_тип_услуг')
+
+kb_view_types_service = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_view_types_service.add(btn_add_types_service).add(btn_delete_types_service).add(btn_types)
+
+btn_add_types_course = KeyboardButton('/Добавить_тип_курса')
+btn_delete_types_course = KeyboardButton('/Удалить_тип_курса')
+
+kb_view_types_course = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_view_types_course.add(btn_add_types_course).add(btn_delete_types_course).add(btn_types)
+
+btn_courses_record = KeyboardButton('/Курсы_запись')
+btn_services_record = KeyboardButton('/Услуги_запись')
+btn_products_record = KeyboardButton('/Товары_заказы')
+btn_tours_record = KeyboardButton('/Ретриты_запись')
+
+kb_mentor = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_mentor.add(btn_courses_record).add(btn_services_record).add(btn_products_record).add(btn_tours_record).add(btn_Main_Menu)
+
+btn_courses_record_delete = KeyboardButton('/Курсы_удалить_запись')
+btn_services_record_delete = KeyboardButton('/Услуги_удалить_запись')
+btn_products_record_delete = KeyboardButton('/Товары_удалить_заказ')
+btn_tours_record_delete = KeyboardButton('/Ретриты_удалить_запись')
+btn_mentor_Menu = KeyboardButton('/Назад')
+
+kb_mentor_delete_courses = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_mentor_delete_courses .add(btn_courses_record_delete).add(btn_mentor_Menu).add(btn_Main_Menu)
+
+kb_mentor_delete_services = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_mentor_delete_services .add(btn_services_record_delete).add(btn_mentor_Menu).add(btn_Main_Menu)
+
+kb_mentor_delete_products = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_mentor_delete_products .add(btn_products_record_delete).add(btn_mentor_Menu).add(btn_Main_Menu)
+
+kb_mentor_delete_tours = ReplyKeyboardMarkup(resize_keyboard=True)
+kb_mentor_delete_tours .add(btn_tours_record_delete).add(btn_mentor_Menu).add(btn_Main_Menu)

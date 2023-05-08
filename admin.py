@@ -5,14 +5,17 @@ from aiogram import types, Dispatcher
 from create_bot import bot
 from aiogram.dispatcher.filters import Text
 from const import ADMIN
-from keyboards import kb_product_category, kb_admin
+from keyboards import kb_product_category, kb_admin, kb_view_types, \
+    kb_view_types_tours, kb_view_types_product, kb_view_types_course, kb_view_types_service
 
 from data_base import db_loader
 from data_base import db_loader_courses
 from data_base import db_loader_tour
 from data_base import db_loader_services, get_admin_access, db_loader_admin, db_loader_mentor, db_delete_mentor, \
     db_delete_admin, db_all_cuses, db_delete_course, db_all_product, db_delete_product, db_delete_service, \
-    db_all_service, db_all_tour, db_delete_tour
+    db_all_service, db_all_tour, db_delete_tour, db_view_types_tour, db_view_types_product, db_view_types_service,\
+    db_view_types_course, db_add_new_type_tour, db_add_new_type_product, db_add_new_type_service, \
+    db_add_new_type_course, db_delete_type_courses, db_delete_type_product, db_delete_type_service, db_delete_type_tour
 
 products_dict = {}
 
@@ -308,9 +311,210 @@ async def delete_id_tour(message: types.Message, state: FSMContext):
     await state.finish()
 
 # ДОБАВИТЬ ТИПЫ ТУРОВ ВВОД/ВЫВОД/УДАЛЕНИЕ
-# ДОБАВИТЬ МЕНТОРОВ КАК УРОВЕНЬ ДОСТУПА
+
+async def view_types(message: types.Message):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await message.reply("Выберите категорию", reply_markup=kb_view_types)
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+# Показать тип туров
+async def view_types_tour(message: types.Message):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await db_view_types_tour(user_id)
+        await message.reply("Выберите действие", reply_markup=kb_view_types_tours)
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+# Показать тип товаров
+async def view_types_product(message: types.Message):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await db_view_types_product(user_id)
+        await message.reply("Выберите действие", reply_markup=kb_view_types_product)
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+# Показать тип услуг
+async def view_types_service(message: types.Message):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await db_view_types_service(user_id)
+        await message.reply("Выберите действие", reply_markup=kb_view_types_service)
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+# Показать тип курсов
+async def view_types_course(message: types.Message):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await db_view_types_course(user_id)
+        await message.reply("Выберите действие", reply_markup=kb_view_types_course)
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+# вернуться в админское меню
+async def back_admin (message: types.Message):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await message.reply("Что желаете посмотреть?", reply_markup=kb_admin)
+    else:
+        await message.reply('Вы не являетесь администратором')
 
 
+# ДОБАВИТЬ ТИПЫ ТУРОВ
+
+class new_type_tour(StatesGroup):
+    tour_name = State()
+
+async def add_new_type_tour (message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await new_type_tour.tour_name.set()
+        await message.reply('Введите название типа ретрита')
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+async def add_new_type_tour_(message: types.Message, state: FSMContext):
+    Tour_name = (message.text)
+    await db_add_new_type_tour(Tour_name)
+    await state.finish()
+    await message.reply('Тип тура добавлен')
+
+# ДОБАВИТЬ ТИПЫ ТОВАРОВ
+
+class new_type_product(StatesGroup):
+    product_name = State()
+
+async def add_new_type_product (message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await new_type_product.product_name.set()
+        await message.reply('Введите название типа товара')
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+async def add_new_type_product_(message: types.Message, state: FSMContext):
+    product_name = (message.text)
+    await db_add_new_type_product(product_name)
+    await state.finish()
+    await message.reply('Тип товара добавлен')
+#
+# # ДОБАВИТЬ ТИПЫ УСЛУГ
+#
+class new_type_service(StatesGroup):
+    service_name = State()
+
+async def add_new_type_service (message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await new_type_service.service_name.set()
+        await message.reply('Введите название типа услуги')
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+async def add_new_type_service_(message: types.Message, state: FSMContext):
+    service_name = (message.text)
+    await db_add_new_type_service(service_name)
+    await state.finish()
+    await message.reply('Тип услуги добавлен')
+
+# # ДОБАВИТЬ ТИПЫ КУРСОВ
+#
+class new_type_course(StatesGroup):
+    course_name = State()
+
+async def add_new_type_course(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await new_type_course.course_name.set()
+        await message.reply('Введите название типа курса')
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+async def add_new_type_course_(message: types.Message, state: FSMContext):
+    course_name = (message.text)
+    await db_add_new_type_course(course_name)
+    await state.finish()
+    await message.reply('Тип курса добавлен')
+
+# #Удалить тип курсы
+class Form_delete_type_courses(StatesGroup):
+    id_type_courses = State()
+
+async def courses_type_record_delete(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await Form_delete_type_courses.id_type_courses.set()
+        await message.reply('Введите id типа, который хотите удалить')
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+
+async def courses_type_record_delete_(message: types.Message, state: FSMContext):
+    id_courses_type = int(message.text)
+    await db_delete_type_courses(id_courses_type)
+    await state.finish()
+    await message.reply('Тип удалён')
+
+# #Удалить тип товары
+class Form_delete_type_product(StatesGroup):
+    id_type_product = State()
+
+async def product_type_record_delete(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await Form_delete_type_product.id_type_product.set()
+        await message.reply('Введите id типа, который хотите удалить')
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+
+async def product_type_record_delete_(message: types.Message, state: FSMContext):
+    id_product_type = int(message.text)
+    await db_delete_type_product(id_product_type)
+    await state.finish()
+    await message.reply('Тип удалён')
+
+# #Удалить тип услуги
+class Form_delete_type_service(StatesGroup):
+    id_type_service = State()
+
+async def service_type_record_delete(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await Form_delete_type_service.id_type_service.set()
+        await message.reply('Введите id типа, который хотите удалить')
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+
+async def service_type_record_delete_(message: types.Message, state: FSMContext):
+    id_service_type = int(message.text)
+    await db_delete_type_service(id_service_type)
+    await state.finish()
+    await message.reply('Тип удалён')
+
+# #Удалить тип курсы
+class Form_delete_type_tour(StatesGroup):
+    id_type_tour = State()
+
+async def tour_type_record_delete(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    if await get_admin_access(user_id):
+        await Form_delete_type_tour.id_type_tour.set()
+        await message.reply('Введите id типа, который хотите удалить')
+    else:
+        await message.reply('У вас нет прав для выполнения этой команды')
+
+
+async def tour_type_record_delete_(message: types.Message, state: FSMContext):
+    id_tour_type = int(message.text)
+    await db_delete_type_tour(id_tour_type)
+    await state.finish()
+    await message.reply('Тип удалён')
 
 
 
@@ -365,3 +569,39 @@ def register_handlers_admin(dp: Dispatcher):
 
     dp.register_message_handler(delete_tour, commands=['Удалить_ретрит'], state=None)
     dp.register_message_handler(delete_id_tour, state=Form_delete_tour.id_tour)
+
+    dp.register_message_handler(view_types, commands=['Типы'], state=None)
+    dp.register_message_handler(back_admin, commands=['Админ_меню'], state=None)
+
+    dp.register_message_handler(view_types_course, commands=['Показать_типы_курсов'], state=None)
+    dp.register_message_handler(view_types_product, commands=['Показать_типы_товаров'], state=None)
+    dp.register_message_handler(view_types_service, commands=['Показать_типы_услуг'], state=None)
+    dp.register_message_handler(view_types_tour, commands=['Показать_типы_ретритов'], state=None)
+
+    dp.register_message_handler(add_new_type_tour, commands=['Добавить_тип_ретрита'], state=None)
+    dp.register_message_handler(add_new_type_tour_, state=new_type_tour.tour_name)
+
+    dp.register_message_handler(add_new_type_product, commands=['Добавить_тип_товара'], state=None)
+    dp.register_message_handler(add_new_type_product_, state=new_type_product.product_name)
+
+    dp.register_message_handler(add_new_type_service, commands=['Добавить_тип_услуг'], state=None)
+    dp.register_message_handler(add_new_type_service_, state=new_type_service.service_name)
+
+    dp.register_message_handler(add_new_type_course, commands=['Добавить_тип_курса'], state=None)
+    dp.register_message_handler(add_new_type_course_, state=new_type_course.course_name)
+
+
+
+    dp.register_message_handler(courses_type_record_delete, commands=['Удалить_тип_курса'], state=None)
+    dp.register_message_handler(courses_type_record_delete_, state=Form_delete_type_courses.id_type_courses)
+
+    dp.register_message_handler(product_type_record_delete, commands=['Удалить_тип_товара'], state=None)
+    dp.register_message_handler(product_type_record_delete_, state=Form_delete_type_product.id_type_product)
+
+    dp.register_message_handler(service_type_record_delete, commands=['Удалить_тип_услуг'], state=None)
+    dp.register_message_handler(service_type_record_delete_, state=Form_delete_type_service.id_type_service)
+
+    dp.register_message_handler(tour_type_record_delete, commands=['Удалить_тип_ретрита'], state=None)
+    dp.register_message_handler(tour_type_record_delete_, state=Form_delete_type_tour.id_type_tour)
+
+

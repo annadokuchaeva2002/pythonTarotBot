@@ -658,4 +658,488 @@ async def db_delete_tour(id_tour, userID):
 
     finally:
         c.close()
+async def get_mentor_access(user_id):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
 
+        with connection.cursor() as c:
+            c.execute("SELECT tg_id_mentor FROM mentors;")
+            results = c.fetchall()
+            for result in results:
+                if user_id == result[0]:
+                    return True
+            return False
+
+    finally:
+        c.close()
+
+async def db_view_tour(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT contact_account, second_name, first_name, otchestvo, id_tour, id_tour_visitor FROM tour_visitor")
+            results = c.fetchall()
+            rows = [f"•Пользователь {contact_account} {second_name} {first_name} {otchestvo} записан на тур {id_tour} " \
+                    f"id клиента-{id_tour_visitor} " for
+                    contact_account, second_name, first_name, otchestvo, id_tour, id_tour_visitor, in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_view_product(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT contact_account, second_name, first_name, otchestvo, id_product, delivery_address, "
+                      "id_buyer_of_goods FROM buyer_of_goods")
+            results = c.fetchall()
+            rows = [f"•Пользователь {contact_account} {second_name} {first_name} {otchestvo} оформил заказ на товар '{id_product}' " \
+                    f" на адрес {delivery_address} id клиента-{id_buyer_of_goods} " for
+                    contact_account, second_name, first_name, otchestvo, id_product, delivery_address, id_buyer_of_goods, in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_view_course(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT contact_account, second_name, first_name, otchestvo, id_course, id_course_student FROM course_student")
+            results = c.fetchall()
+            rows = [f"•Пользователь {contact_account} {second_name} {first_name} {otchestvo} записан на курс {id_course} " \
+                    f"id клиента-{id_course_student} " for
+                    contact_account, second_name, first_name, otchestvo, id_course, id_course_student, in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_view_services(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT contact_account, second_name, first_name, otchestvo, id_service, id_service_buyer FROM service_buyer")
+            results = c.fetchall()
+            rows = [f"•Пользователь {contact_account} {second_name} {first_name} {otchestvo} записан на {id_service} " \
+                    f"id клиента-{id_service_buyer} " for
+                    contact_account, second_name, first_name, otchestvo, id_service, id_service_buyer, in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_delete_record_tour(id_user_tour):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute(f"DELETE FROM tour_visitor WHERE id_tour_visitor = '{id_user_tour}'")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+
+async def db_delete_record_service(id_service_buyer):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute(f"DELETE FROM service_buyer WHERE id_service_buyer = '{id_service_buyer}'")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+
+async def db_delete_record_products(id_products_buyer):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute(f"DELETE FROM buyer_of_goods WHERE id_buyer_of_goods = '{id_products_buyer}'")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+
+async def db_delete_record_courses(id_course_student):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute(f"DELETE FROM course_student WHERE id_course_student = '{id_course_student}'")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+
+async def db_view_types_tour(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT name_of_tour, id_tour_type FROM tour_type")
+            results = c.fetchall()
+            rows = [f"•Тип тура - {name_of_tour} id {id_tour_type}" for
+                    name_of_tour, id_tour_type, in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_view_types_product(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT name_of_product, id_product_type FROM product_type")
+            results = c.fetchall()
+            rows = [f"•Тип товара - {name_of_product} id {id_product_type}" for
+                    name_of_product, id_product_type, in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+async def db_view_types_service(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT name_of_service, id_service_type FROM service_type")
+            results = c.fetchall()
+            rows = [f"•Тип услуги - {name_of_service} id {id_service_type}" for
+                    name_of_service, id_service_type, in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_view_types_course(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT name_of_course, id_course_type FROM course_type")
+            results = c.fetchall()
+            rows = [f"•Тип курса - {name_of_course} id {id_course_type}" for
+                    name_of_course, id_course_type, in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_add_new_type_tour(name_of_course):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        name_of_tour = name_of_course
+
+
+        with connection.cursor() as c:
+            c.execute(f"INSERT INTO tour_type (name_of_tour) VALUES ('{name_of_tour}')")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_add_new_type_product(name_of_product):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        name_of_product = name_of_product
+
+
+        with connection.cursor() as c:
+            c.execute(f"INSERT INTO product_type (name_of_product) VALUES ('{name_of_product}')")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_add_new_type_service(name_of_service):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        name_of_service = name_of_service
+
+
+        with connection.cursor() as c:
+            c.execute(f"INSERT INTO service_type (name_of_service) VALUES ('{name_of_service}')")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_add_new_type_course(name_of_course):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        name_of_course = name_of_course
+
+
+        with connection.cursor() as c:
+            c.execute(f"INSERT INTO course_type (name_of_course) VALUES ('{name_of_course}')")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_delete_type_courses(id_courses_type):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute(f"DELETE FROM course_type WHERE id_course_type = '{id_courses_type}'")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+async def db_delete_type_product(id_product_type):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute(f"DELETE FROM product_type WHERE id_product_type = '{id_product_type}'")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+async def db_delete_type_service(id_service_type):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute(f"DELETE FROM service_type WHERE id_service_type = '{id_service_type}'")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_delete_type_tour(id_tour_type):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute(f"DELETE FROM tour_type WHERE id_tour_type = '{id_tour_type}'")
+
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()

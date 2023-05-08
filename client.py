@@ -6,14 +6,6 @@ from data_base import db_unloader, db_unloader_service, db_unloader_tour, db_unl
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
-
-class Form(StatesGroup):
-    name = State()
-    surname = State()
-    patronymic = State()
-    course = State()
-
-
 async def command_start(message: types.Message):
     await message.answer('Привет! Я бот интернет магазина Tarot shop, что Вас интересует?', reply_markup=kb_Main_Menu)
 
@@ -176,6 +168,13 @@ async def command_78_doors(message: types.Message):
 
 # приобрести курс
 
+class Form(StatesGroup):
+    name = State()
+    surname = State()
+    patronymic = State()
+    contact_account = State()
+    course = State()
+
 async def command_buy_course(message: types.Message):
     await Form.name.set()
     await message.answer('Введите ваше имя')
@@ -196,24 +195,76 @@ async def load_patronymic(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['patronymic'] = message.text
         await Form.next()
-        await message.reply('Введите ID курса')
+        await message.reply('Введите ваше имя пользователя (@ИмяПользователяТГ)')
+
+async def load_contact_account(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['contact_account'] = message.text
+        await Form.next()
+        await message.reply('Введите id курса')
 
 
 async def load_course(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['course'] = int(message.text)
-        data['contact_account'] =message.from_user.id
     async with state.proxy() as data:
         await db_loader_course_student(data)
         await message.reply('Заявка на прохождение курса сформирована, скоро с Вами свяжется наш куратор. \n Спасибо, что выбрали tarot shop💕')
     await state.finish()
+
+
+# Услуга
+class Form_services(StatesGroup):
+    name = State()
+    surname = State()
+    patronymic = State()
+    contact_account = State()
+    service = State()
+
+async def command_buy_services(message: types.Message):
+    await Form_services.name.set()
+    await message.answer('Введите ваше имя')
+
+async def load_name_services(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['name'] = message.text
+        await Form_services.next()
+        await message.reply('Введите вашу фамилию')
+
+async def load_surname_services(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['surname'] = message.text
+        await Form_services.next()
+        await message.reply('Введите ваше отчество')
+
+async def load_patronymic_services(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['patronymic'] = message.text
+        await Form_services.next()
+        await message.reply('Введите ваше имя пользователя (@ИмяПользователяТГ)')
+
+async def load_contact_account_services(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['contact_account'] = message.text
+        await Form_services.next()
+        await message.reply('Введите id услуги')
+
+async def load_services(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['service'] = int(message.text)
+    async with state.proxy() as data:
+        await db_loader_service_buyer(data)
+        await message.reply('Скоро с Вами свяжется наш практик. \n Спасибо, что выбрали tarot shop💕')
+    await state.finish()
  # приобрести товар
+
 
 class Form_products(StatesGroup):
     name = State()
     surname = State()
     patronymic = State()
     address = State()
+    contact_account = State()
     product = State()
 
 
@@ -243,7 +294,13 @@ async def load_address(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['address'] = message.text
         await Form_products.next()
-        await message.reply('Введите ID товара')
+        await message.reply('Введите ваше имя пользователя (@ИмяПользователяТГ)')
+
+async def load_contact_account_product(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['contact_account'] = message.text
+        await Form_products.next()
+        await message.reply('Введите id товара')
 
 async def load_product(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
@@ -253,43 +310,6 @@ async def load_product(message: types.Message, state: FSMContext):
         await db_loader_buyer_of_goods(data)
     await state.finish()
     await message.reply('Скоро с Вами свяжется наш сотрудник \n Спасибо, что выбрали tarot shop💕')
-# Услуга
-class Form_services(StatesGroup):
-    name = State()
-    surname = State()
-    patronymic = State()
-    product = State()
-
-async def command_buy_services(message: types.Message):
-    await Form_services.name.set()
-    await message.answer('Введите ваше имя')
-
-async def load_name_services(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['name'] = message.text
-        await Form_services.next()
-        await message.reply('Введите вашу фамилию')
-
-async def load_surname_services(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['surname'] = message.text
-        await Form_services.next()
-        await message.reply('Введите ваше отчество')
-
-async def load_patronymic_services(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['patronymic'] = message.text
-        await Form_services.next()
-        await message.reply('Введите ID услуги')
-
-async def load_services(message: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['service'] = int(message.text)
-        data['contact_account'] =message.from_user.id
-    async with state.proxy() as data:
-        await db_loader_service_buyer(data)
-        await message.reply('Скоро с Вами свяжется наш практик. \n Спасибо, что выбрали tarot shop💕')
-    await state.finish()
 
 # ретрит
 
@@ -297,7 +317,9 @@ class Form_tour(StatesGroup):
     name = State()
     surname = State()
     patronymic = State()
+    contact_account = State()
     tour = State()
+
 
 async def command_buy_tour(message: types.Message):
     await Form_tour.name.set()
@@ -319,13 +341,18 @@ async def load_patronymic_tour(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['patronymic'] = message.text
         await Form_tour.next()
-        await message.reply('Введите ID ретрита')
+        await message.reply('Введите ваше имя пользователя (@ИмяПользователяТГ)')
+
+async def load_contact_account_tour(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['contact_account'] = message.text
+        await Form_tour.next()
+        await message.reply('Введите id ретрита')
 
 
 async def load_tour(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['tour'] = int(message.text)
-        data['contact_account'] =message.from_user.id
     async with state.proxy() as data:
         await db_loader_tour_visitor(data)
         await message.reply('Заявка на участие в ретрите отпрвлена, скоро с Вами свяжется наш куратор. \n Спасибо, что выбрали tarot shop💕')
@@ -385,26 +412,32 @@ def register_handlers_client(dp : Dispatcher):
     dp.register_message_handler(load_name, state=Form.name)
     dp.register_message_handler(load_surname, state=Form.surname)
     dp.register_message_handler(load_patronymic, state=Form.patronymic)
+    dp.register_message_handler(load_contact_account, state=Form.contact_account)
     dp.register_message_handler(load_course, state=Form.course)
+
+    dp.register_message_handler(command_buy_tour, commands=['Принять_участие'], state=None)
+    dp.register_message_handler(load_name_tour, state=Form_tour.name)
+    dp.register_message_handler(load_surname_tour, state=Form_tour.surname)
+    dp.register_message_handler(load_patronymic_tour, state=Form_tour.patronymic)
+    dp.register_message_handler(load_contact_account_tour, state=Form_tour.contact_account)
+    dp.register_message_handler(load_tour, state=Form_tour.tour)
 
     dp.register_message_handler(command_buy_product, commands=['Приобрести_товар'], state=None)
     dp.register_message_handler(load_product_name, state=Form_products.name)
     dp.register_message_handler(load_product_surname, state=Form_products.surname)
     dp.register_message_handler(load_product_patronymic, state=Form_products.patronymic)
     dp.register_message_handler(load_address, state=Form_products.address)
+    dp.register_message_handler(load_contact_account_product, state=Form_products.contact_account)
     dp.register_message_handler(load_product, state=Form_products.product)
 
     dp.register_message_handler(command_buy_services, commands=['Записаться'], state=None)
     dp.register_message_handler(load_name_services, state=Form_services.name)
     dp.register_message_handler(load_surname_services, state=Form_services.surname)
     dp.register_message_handler(load_patronymic_services, state=Form_services.patronymic)
-    dp.register_message_handler(load_services, state=Form_services.product)
+    dp.register_message_handler(load_contact_account_services, state=Form_services.contact_account)
+    dp.register_message_handler(load_services, state=Form_services.service)
 
-    dp.register_message_handler(command_buy_tour, commands=['Принять_участие'], state=None)
-    dp.register_message_handler(load_name_tour, state=Form_tour.name)
-    dp.register_message_handler(load_surname_tour, state=Form_tour.surname)
-    dp.register_message_handler(load_patronymic_tour, state=Form_tour.patronymic)
-    dp.register_message_handler(load_tour, state=Form_tour.tour)
+
 
 
 

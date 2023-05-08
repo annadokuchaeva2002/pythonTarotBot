@@ -9,9 +9,10 @@ async def on_startup(_):
     # data_base.sql_start()
 
 
-import client, other, admin
+import client, admin, mentor
 client.register_handlers_client(dp)
 admin.register_handlers_admin(dp)
+mentor.register_handlers_mentor(dp)
 
 
 
