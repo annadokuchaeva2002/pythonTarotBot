@@ -1,6 +1,6 @@
 host = '127.0.0.1'
 user = 'postgres'
-password = 'bd1402'
+password = 'пароль'
 db_name = 'kursachek'
 
 
