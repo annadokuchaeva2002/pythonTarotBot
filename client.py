@@ -106,11 +106,11 @@ async def command_intuition(message: types.Message):
     await message.answer('Желаете приобрести свечу?', reply_markup=kb_buy_product)
 async def command_career(message: types.Message):
     ID = message.from_user.id
-    await db_unloader_product("Карьера – Свеча «Спираль Богатства»", ID)
+    await db_unloader_product("Карьера", ID)
     await message.answer('Желаете приобрести свечу?', reply_markup=kb_buy_product)
 async def command_love(message: types.Message):
     ID = message.from_user.id
-    await db_unloader_product("Любовь - Свеча «Влюблённые»", ID)
+    await db_unloader_product("Любовь", ID)
     await message.answer('Желаете приобрести свечу?', reply_markup=kb_buy_product)
 
 async def command_rose_quartz(message: types.Message):
@@ -305,7 +305,6 @@ async def load_contact_account_product(message: types.Message, state: FSMContext
 async def load_product(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['product'] = int(message.text)
-        data['contact_account'] =message.from_user.id
     async with state.proxy() as data:
         await db_loader_buyer_of_goods(data)
     await state.finish()

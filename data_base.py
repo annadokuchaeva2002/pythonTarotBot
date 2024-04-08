@@ -127,10 +127,10 @@ async def db_unloader(identifier, userID):
         )
 
         with connection.cursor() as c:
-            c.execute(f"SELECT courses_name, description, price, courses_pic FROM courses WHERE courses_name= '{identifier}'")
+            c.execute(f"SELECT courses_name, description, price, courses_pic, id_course FROM courses WHERE courses_name= '{identifier}'")
             card = c.fetchall()
             a = card[0]
-            await bot.send_photo(chat_id=userID, photo=a[3], caption="<b>" + a[0] + "</b>\n" + a[1] + "\n" + "Цена в рублях: " + str(a[2]) + "\n" + "ID - " + str(identifier), parse_mode="HTML")
+            await bot.send_photo(chat_id=userID, photo=a[3], caption="<b>" + a[0] + "</b>\n" + a[1] + "\n" + "Цена в рублях: " + str(a[2]) + "\n" + "ID - " + str(a[4]), parse_mode="HTML")
         connection.commit()
 
     except Exception as e:
@@ -149,10 +149,10 @@ async def db_unloader_service(identifier, userID):
         )
 
         with connection.cursor() as c:
-            c.execute(f"SELECT services_name, description, price, services_pic FROM services WHERE services_name= '{identifier}'")
+            c.execute(f"SELECT services_name, description, price, services_pic, id_service FROM services WHERE services_name= '{identifier}'")
             card = c.fetchall()
             a = card[0]
-            await bot.send_photo(chat_id=userID, photo=a[3], caption="<b>" + a[0] + "</b>\n" + a[1] + "\n" + "Цена в рублях: " + str(a[2]) + "\n" + "ID - " + str(identifier), parse_mode="HTML")
+            await bot.send_photo(chat_id=userID, photo=a[3], caption="<b>" + a[0] + "</b>\n" + a[1] + "\n" + "Цена в рублях: " + str(a[2]) + "\n" + "ID - " + str(a[4]), parse_mode="HTML")
         connection.commit()
 
     except Exception as e:
@@ -171,10 +171,10 @@ async def db_unloader_tour(identifier, userID):
         )
 
         with connection.cursor() as c:
-            c.execute(f"SELECT tour_name, description, price, tour_pic FROM tour WHERE tour_name= '{identifier}'")
+            c.execute(f"SELECT tour_name, description, price, tour_pic, id_tour FROM tour WHERE tour_name= '{identifier}'")
             card = c.fetchall()
             a = card[0]
-            await bot.send_photo(chat_id=userID, photo=a[3], caption="<b>" + a[0] + "</b>\n" + a[1] + "\n" + "Цена в рублях: " + str(a[2]) + "\n" + "ID - " + str(identifier), parse_mode="HTML")
+            await bot.send_photo(chat_id=userID, photo=a[3], caption="<b>" + a[0] + "</b>\n" + a[1] + "\n" + "Цена в рублях: " + str(a[2]) + "\n" + "ID - " + str(a[4]), parse_mode="HTML")
         connection.commit()
 
     except Exception as e:
@@ -193,10 +193,10 @@ async def db_unloader_product(identifier, userID):
         )
 
         with connection.cursor() as c:
-            c.execute(f"SELECT product_name, description, price, product_pic FROM product WHERE product_name= '{identifier}'")
+            c.execute(f"SELECT product_name, description, price, product_pic, id_product FROM product WHERE product_name= '{identifier}'")
             card = c.fetchall()
             a = card[0]
-            await bot.send_photo(chat_id=userID, photo=a[3], caption="<b>" + a[0] + "</b>\n" + a[1] + "\n" + "Цена в рублях: " + str(a[2]) + "\n" + "ID - " + str(identifier), parse_mode="HTML")
+            await bot.send_photo(chat_id=userID, photo=a[3], caption="<b>" + a[0] + "</b>\n" + a[1] + "\n" + "Цена в рублях: " + str(a[2]) + "\n" + "ID - " + str(a[4]), parse_mode="HTML")
         connection.commit()
 
     except Exception as e:
@@ -320,7 +320,7 @@ async def get_admin_access(user_id):
         )
 
         with connection.cursor() as c:
-            c.execute("SELECT tg_id_admin FROM admini;")
+            c.execute("SELECT tg_id FROM admini;")
             results = c.fetchall()
             for result in results:
                 if user_id == result[0]:
@@ -329,6 +329,12 @@ async def get_admin_access(user_id):
 
     finally:
         c.close()
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 async def db_loader_admin(data):
     try:
@@ -345,8 +351,58 @@ async def db_loader_admin(data):
         tg_id_admin = data['tg_id_admin']
 
         with connection.cursor() as c:
-            c.execute(f"INSERT INTO admini (first_name_admin, second_name_admin, contact_account, tg_id_admin) VALUES ('{name}', '{second_name}', '{contact_account}', '{tg_id_admin}')")
+            c.execute(f"INSERT INTO admini (first_name_admin, second_name_admin, contact_account, tg_id) VALUES ('{name}', '{second_name}', '{contact_account}', '{tg_id_admin}')")
 
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_all_admin(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT first_name_admin, second_name_admin, id_admin FROM admini")
+            results = c.fetchall()
+            rows = [f"{first_name_admin} {second_name_admin} {id_admin}" for first_name_admin, second_name_admin, id_admin in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+async def db_all_mentor(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT first_name_mentor, second_name_mentor, id_mentor FROM mentors")
+            results = c.fetchall()
+            rows = [f"{first_name_mentor} {second_name_mentor} {id_mentor}" for first_name_mentor, second_name_mentor, id_mentor in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
         connection.commit()
 
     except Exception as e:
@@ -370,7 +426,7 @@ async def db_loader_mentor(data):
         tg_id_mentor = data['tg_id_mentor']
 
         with connection.cursor() as c:
-            c.execute(f"INSERT INTO mentors (first_name_mentor, second_name_mentor, contact_account_mentor, tg_id_mentor) VALUES ('{name}', '{second_name}', '{contact_account}', '{tg_id_mentor}')")
+            c.execute(f"INSERT INTO mentors (first_name_mentor, second_name_mentor, contact_account_mentor, tg_id) VALUES ('{name}', '{second_name}', '{contact_account}', '{tg_id_mentor}')")
 
         connection.commit()
 
@@ -668,7 +724,7 @@ async def get_mentor_access(user_id):
         )
 
         with connection.cursor() as c:
-            c.execute("SELECT tg_id_mentor FROM mentors;")
+            c.execute("SELECT tg_id FROM mentors;")
             results = c.fetchall()
             for result in results:
                 if user_id == result[0]:
@@ -716,14 +772,16 @@ async def db_view_product(userID):
 
         with connection.cursor() as c:
             c.execute("SELECT contact_account, second_name, first_name, otchestvo, id_product, delivery_address, "
-                      "id_buyer_of_goods FROM buyer_of_goods")
+                      "id_buyer_of_goods, information FROM buyer_of_goods")
             results = c.fetchall()
-            rows = [f"•Пользователь {contact_account} {second_name} {first_name} {otchestvo} оформил заказ на товар '{id_product}' " \
-                    f" на адрес {delivery_address} id клиента-{id_buyer_of_goods} " for
-                    contact_account, second_name, first_name, otchestvo, id_product, delivery_address, id_buyer_of_goods, in results]
+            rows = [
+                f"•Пользователь {contact_account} {second_name} {first_name} {otchestvo} оформил заказ на товар '{id_product}' " \
+                f" на адрес {delivery_address} id клиента-{id_buyer_of_goods} {str(information) if information is not None else ''}"
+                for
+                contact_account, second_name, first_name, otchestvo, id_product, delivery_address, id_buyer_of_goods, information
+                in results]
 
             text = "\n".join(rows)
-
         await bot.send_message(chat_id=userID, text=text)
         connection.commit()
 
@@ -1137,6 +1195,35 @@ async def db_delete_type_tour(id_tour_type):
             c.execute(f"DELETE FROM tour_type WHERE id_tour_type = '{id_tour_type}'")
 
         connection.commit()
+
+    except Exception as e:
+      print(e)
+
+    finally:
+        c.close()
+
+
+async def  db_view_mentor(userID):
+    try:
+        connection = psycopg2.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=db_name
+        )
+
+        with connection.cursor() as c:
+            c.execute("SELECT first_name_mentor, second_name_mentor, id_mentor FROM mentors")
+            results = c.fetchall()
+            rows = [f"•{first_name_mentor} {second_name_mentor} id {id_mentor}" for
+                    first_name_mentor, second_name_mentor, id_mentor, in results]
+
+            text = "\n".join(rows)
+
+        await bot.send_message(chat_id=userID, text=text)
+        connection.commit()
+
+
 
     except Exception as e:
       print(e)

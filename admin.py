@@ -15,7 +15,8 @@ from data_base import db_loader_services, get_admin_access, db_loader_admin, db_
     db_delete_admin, db_all_cuses, db_delete_course, db_all_product, db_delete_product, db_delete_service, \
     db_all_service, db_all_tour, db_delete_tour, db_view_types_tour, db_view_types_product, db_view_types_service,\
     db_view_types_course, db_add_new_type_tour, db_add_new_type_product, db_add_new_type_service, \
-    db_add_new_type_course, db_delete_type_courses, db_delete_type_product, db_delete_type_service, db_delete_type_tour
+    db_add_new_type_course, db_delete_type_courses, db_delete_type_product, db_delete_type_service, \
+    db_delete_type_tour, db_view_mentor, db_all_admin, db_all_mentor
 
 products_dict = {}
 
@@ -61,6 +62,8 @@ async def load_name(message: types.Message, state: FSMContext):
         data['name'] = message.text
     await FSMAdmin.next()
     await message.reply('Введите id ментора')
+    userID = message.from_user.id
+    await db_view_mentor(userID)
 
 async def load_mentor(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
@@ -91,25 +94,25 @@ async def command_products_category(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         await db_loader(data)
     await state.finish()
-    await message.reply('Запись добавлена в таблицу')
+    await message.reply('Запись добавлена в таблицу', reply_markup=kb_admin)
 
 async def command_courses_category(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         await db_loader_courses(data)
     await state.finish()
-    await message.reply('Запись добавлена в таблицу')
+    await message.reply('Запись добавлена в таблицу', reply_markup=kb_admin)
 
 async def command_tours_category(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         await db_loader_tour(data)
     await state.finish()
-    await message.reply('Запись добавлена в таблицу')
+    await message.reply('Запись добавлена в таблицу', reply_markup=kb_admin)
 
 async def command_services_category(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         await db_loader_services(data)
     await state.finish()
-    await message.reply('Запись добавлена в таблицу')
+    await message.reply('Запись добавлена в таблицу', reply_markup=kb_admin)
 
 
 # Проверка администратора
@@ -158,7 +161,7 @@ async def load_tg_id_admin(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         await db_loader_admin(data)
     await state.finish()
-    await message.reply('Новый администратор добавлен')
+    await message.reply('Новый администратор добавлен', reply_markup=kb_admin)
 
 # Добавление ментора
 
@@ -197,7 +200,7 @@ async def load_tg_id_mentor(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         await db_loader_mentor(data)
     await state.finish()
-    await message.reply('Новый ментор добавлен')
+    await message.reply('Новый ментор добавлен', reply_markup=kb_admin)
 # Удаление ментора
 class Form_delete_mentor(StatesGroup):
     id_mentor = State()
@@ -207,6 +210,8 @@ async def delete_mentor(message: types.Message):
     if await get_admin_access(user_id):
         await Form_delete_mentor.id_mentor.set()
         await message.reply('Введиете id ментора')
+        user_id = message.from_user.id
+        await db_all_mentor(user_id)
     else:
         await message.reply('У вас нет прав для выполнения этой команды')
 
@@ -225,6 +230,8 @@ async def delete_admin(message: types.Message):
     if await get_admin_access(user_id):
         await Form_delete_admin.id_admin.set()
         await message.reply('Введиете id администратора')
+        user_id = message.from_user.id
+        await db_all_admin(user_id)
     else:
         await message.reply('У вас нет прав для выполнения этой команды')
 
@@ -381,7 +388,7 @@ async def add_new_type_tour_(message: types.Message, state: FSMContext):
     Tour_name = (message.text)
     await db_add_new_type_tour(Tour_name)
     await state.finish()
-    await message.reply('Тип тура добавлен')
+    await message.reply('Тип ретрита добавлен', reply_markup=kb_admin)
 
 # ДОБАВИТЬ ТИПЫ ТОВАРОВ
 
@@ -400,7 +407,7 @@ async def add_new_type_product_(message: types.Message, state: FSMContext):
     product_name = (message.text)
     await db_add_new_type_product(product_name)
     await state.finish()
-    await message.reply('Тип товара добавлен')
+    await message.reply('Тип товара добавлен', reply_markup=kb_admin)
 #
 # # ДОБАВИТЬ ТИПЫ УСЛУГ
 #
@@ -419,7 +426,7 @@ async def add_new_type_service_(message: types.Message, state: FSMContext):
     service_name = (message.text)
     await db_add_new_type_service(service_name)
     await state.finish()
-    await message.reply('Тип услуги добавлен')
+    await message.reply('Тип услуги добавлен', reply_markup=kb_admin)
 
 # # ДОБАВИТЬ ТИПЫ КУРСОВ
 #
@@ -438,7 +445,7 @@ async def add_new_type_course_(message: types.Message, state: FSMContext):
     course_name = (message.text)
     await db_add_new_type_course(course_name)
     await state.finish()
-    await message.reply('Тип курса добавлен')
+    await message.reply('Тип курса добавлен', reply_markup=kb_admin)
 
 # #Удалить тип курсы
 class Form_delete_type_courses(StatesGroup):
@@ -457,7 +464,7 @@ async def courses_type_record_delete_(message: types.Message, state: FSMContext)
     id_courses_type = int(message.text)
     await db_delete_type_courses(id_courses_type)
     await state.finish()
-    await message.reply('Тип удалён')
+    await message.reply('Тип удалён', reply_markup=kb_admin)
 
 # #Удалить тип товары
 class Form_delete_type_product(StatesGroup):
@@ -476,7 +483,7 @@ async def product_type_record_delete_(message: types.Message, state: FSMContext)
     id_product_type = int(message.text)
     await db_delete_type_product(id_product_type)
     await state.finish()
-    await message.reply('Тип удалён')
+    await message.reply('Тип товара удалён', reply_markup=kb_admin)
 
 # #Удалить тип услуги
 class Form_delete_type_service(StatesGroup):
@@ -495,7 +502,7 @@ async def service_type_record_delete_(message: types.Message, state: FSMContext)
     id_service_type = int(message.text)
     await db_delete_type_service(id_service_type)
     await state.finish()
-    await message.reply('Тип удалён')
+    await message.reply('Тип услуги удалён', reply_markup=kb_admin)
 
 # #Удалить тип курсы
 class Form_delete_type_tour(StatesGroup):
@@ -514,7 +521,7 @@ async def tour_type_record_delete_(message: types.Message, state: FSMContext):
     id_tour_type = int(message.text)
     await db_delete_type_tour(id_tour_type)
     await state.finish()
-    await message.reply('Тип удалён')
+    await message.reply('Тип курса удалён', reply_markup=kb_admin)
 
 
 
